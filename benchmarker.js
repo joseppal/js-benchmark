@@ -3,17 +3,17 @@ var benchmarker = benchmarker || {};
 benchmarker.currentSuite = null;
 
 
-// Suite holds a collection of run definitions
+// Suite holds a collection of implementations to be benchmarked.
 benchmarker.Suite = function(title) {
-  this.runDefinitions = [];
+  this.implementations = [];
   this.title = title;
   this.reporter = new benchmarker.Reporter(title);
 };
 
 
-// Adds a run specification to the suite
+// Adds an implementation to the suite.
 benchmarker.Suite.prototype.add = function(label, func, options) {
-    this.runDefinitions.push({
+    this.implementations.push({
       label: label,
       func: func,
       options: options
@@ -21,15 +21,15 @@ benchmarker.Suite.prototype.add = function(label, func, options) {
 };
 
 
-// Executes the suite. The label and execution time of each run specification
-// is reported to the reporter.
+// Executes the suite. The label and execution time of each implementation is
+// reported to the reporter.
 benchmarker.Suite.prototype.execute = function() {
     var executionTime = 0,
-        l = this.runDefinitions.length,
+        l = this.implementations.length,
         reporter = this.reporter,
         i;
 
-    var executeRunDefinition = function(counter, label, func, iterations) {
+    var executeImplementations = function(counter, label, func, iterations) {
       setTimeout(function() {
           executionTime = executionTimeOf(func, iterations);
           reporter.add(label, executionTime);
@@ -41,17 +41,17 @@ benchmarker.Suite.prototype.execute = function() {
     };
 
     for (i = 0; i < l; i++) {
-      executeRunDefinition(i,
-        this.runDefinitions[i].label,
-        this.runDefinitions[i].func,
-        this.runDefinitions[i].options.iterations);
+      executeImplementations(i,
+        this.implementations[i].label,
+        this.implementations[i].func,
+        this.implementations[i].options.iterations);
     }
 };
 
 
-// Returns an execution time of a given function.
-// If the execution time of the function is fast use higher iterations
-// value to get more accurate results.
+// Returns an execution time of a given function. If the execution time of the
+// function is fast use higher number of iterations to get more accurate
+// results.
 var executionTimeOf = function(func, iterations) {
     iterations = iterations || 1000;
     var l = iterations;
@@ -65,19 +65,19 @@ var executionTimeOf = function(func, iterations) {
 };
 
 
-// Creates a new benchmarker suite and executes it
-var benchmark = function (title, benchmarkDefinitions) {
-  if (typeof title != 'string' || typeof benchmarkDefinitions != 'function') {
+// Creates a new benchmarking suite and executes it.
+var benchmark = function (title, setImplementations) {
+  if (typeof title != 'string' || typeof setImplementations != 'function') {
     throw 'Invalid benchmark definition.';
   }
   benchmarker.currentSuite = new benchmarker.Suite(title);
-  benchmarkDefinitions();
+  setImplementations();
   benchmarker.currentSuite.execute();
 };
 
 
-// Adds a run specification to the current suite
-var run = function (label, func, options) {
+// Adds an implementation to the current benchmarking suite.
+var implementation = function (label, func, options) {
   if (typeof label != 'string' || typeof func != 'function' ||
       !options || typeof options.iterations != 'number') {
     throw 'Invalid run definition.';
