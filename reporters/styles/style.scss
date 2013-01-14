@@ -1,0 +1,116 @@
+@mixin background-radial-gradient($from, $to) {
+  background: -moz-radial-gradient($from, $to);
+  background: -webkit-radial-gradient($from, $to);
+  background: radial-gradient($from, $to);
+}
+
+@mixin background-linear-gradient($from, $to, $important: false) {
+  @if $important {
+    background: -moz-linear-gradient($from, $to) !important;
+    background: -webkit-linear-gradient($from, $to) !important;;
+    background: linear-gradient($from, $to) !important;;
+  } @else {
+    background: -moz-linear-gradient($from, $to);
+    background: -webkit-linear-gradient($from, $to);
+    background: linear-gradient($from, $to);
+  }
+}
+
+@mixin border-rounded($tl: 10px, $tr: 10px, $br: 10px, $bl: 10px) {
+  -moz-border-radius: $tl $tr $br $bl;
+  -webkit-border-radius: $tl $tr $br $bl;
+  border-radius: $tl $tr $br $bl;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: normal;
+  background: #000000;
+  color: #cccccc;
+  margin: 0;
+}
+
+$bm-height: 20px; 
+$bm-timebar-color: #007AA3;
+$bm-time-color: #444444;
+$bm-text-color: #aaaaaa;
+$bm-bg-color: #222222;
+$bm-label-color: #333333;
+$bm-gradient-darken: 6;
+$bm-timebar-width: 300px;
+$bm-label-width: 150px;
+$bm-time-width: 100px;
+$bm-label-padding-side: 20px;
+$bm-bar-border-rad: 10px;
+
+
+.bm {
+  padding: 20px;
+  margin: 20px;
+  background: #111111;
+}
+
+.bm-title {
+  font-size: 24px;
+  font-weight: normal;
+  margin: 0 0 10px 0;
+  float: left;
+}
+
+.bm-ul {
+  clear: both;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.bm-ul li {
+  display: block;
+  width: $bm-timebar-width + $bm-label-width + $bm-time-width + 4 * $bm-label-padding-side + $bm-bar-border-rad;
+  height: $bm-height + 10px;
+  padding: 0;
+  margin: 10px 0 10px 0;
+  overflow: hidden;
+  @include background-linear-gradient($bm-bg-color, $bm-bg-color);
+  @include border-rounded($bm-bar-border-rad, $bm-bar-border-rad,
+    $bm-bar-border-rad, $bm-bar-border-rad);
+}
+
+.bm-label {
+  color: $bm-text-color;
+  clear: both;
+  float: left;
+  width: $bm-label-width;
+  height: $bm-height;
+  padding: 5px $bm-label-padding-side 5px $bm-label-padding-side;
+  @include background-linear-gradient($bm-label-color,
+    darken($bm-label-color, $bm-gradient-darken));
+  @include border-rounded($bm-bar-border-rad, 0, 0, $bm-bar-border-rad);
+}
+
+.bm-time {
+  color: $bm-text-color;
+  float: left;
+  width: $bm-time-width;
+  height: $bm-height;
+  padding: 5px $bm-label-padding-side 5px $bm-label-padding-side;
+  @include background-linear-gradient($bm-time-color,
+    darken($bm-time-color, $bm-gradient-darken));
+}
+
+.bm-timebar {
+  float: left;
+  width: 0px;
+  height: $bm-height;
+  padding: 5px $bm-bar-border-rad 5px 0;
+  @include background-linear-gradient($bm-timebar-color,
+    darken($bm-timebar-color, $bm-gradient-darken));
+  @include border-rounded(0, $bm-bar-border-rad, $bm-bar-border-rad, 0);
+
+  transition: width 0.7s;
+  -moz-transition: width 0.7s;
+  -webkit-transition: width 0.7s;
+  -o-transition: width 0.7s;
+}

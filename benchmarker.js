@@ -78,12 +78,22 @@ var benchmark = function (title, setImplementations) {
 
 // Adds an implementation to the current benchmarking suite.
 var implementation = function (label, func, options) {
-  if (typeof label != 'string' || typeof func != 'function' ||
-      !options || typeof options.iterations != 'number') {
+  if (typeof label != 'string' || typeof func != 'function') {
     throw 'Invalid run definition.';
   }
+  options = options || {};
+  options.iterations = options.iterations || 1000;
+
   benchmarker.currentSuite.add(label, func, options);
 };
+
+
+
+
+
+
+
+
 
 
 
